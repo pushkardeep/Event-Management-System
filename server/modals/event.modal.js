@@ -27,7 +27,7 @@ const eventSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ["music", "sport", "art", "theater", "cinema", "other"],
+    enum: ["music", "sport", "art", "other"],
     required: true,
   },
   status: {
