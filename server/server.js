@@ -26,4 +26,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/user", userRouter);
 app.use("/event", eventRouter);
 
+app.get("/",(req, res)=>{
+res.send("i am alive")
+})
+
 module.exports = server;
