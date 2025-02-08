@@ -114,7 +114,7 @@ function EventCard({ data }) {
               title={
                 user?._id === data?.owner?._id
                   ? "Manage event"
-                  : isEnrolled
+                  : isEnrolled && user?.role !== "guest"
                   ? "Cancel Enrollment"
                   : "Enroll Now"
               }
