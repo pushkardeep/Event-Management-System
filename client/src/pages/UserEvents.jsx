@@ -41,19 +41,17 @@ const UserEvents = () => {
     if (!user) return;
 
     const fetchEvents = async () => {
-      if (!user_events) {
-        dispatch(setLoading(true));
-        const { success, message } = await userEvents(token, dispatch);
-        if (!success) {
-          dispatch(setIsToatOpen(true));
-          dispatch(setToastMessage(message));
-        }
-        dispatch(setLoading(false));
+      dispatch(setLoading(true));
+      const { success, message } = await userEvents(token, dispatch);
+      if (!success) {
+        dispatch(setIsToatOpen(true));
+        dispatch(setToastMessage(message));
       }
+      dispatch(setLoading(false));
     };
 
     fetchEvents();
-  }, [user, user_events]);
+  }, [user]);
 
   useEffect(() => {
     dispatch(setDashboardOpen(false));
@@ -130,7 +128,7 @@ const EventContent = ({ events, dateInputRef }) => (
 // Empty State
 const EmptyState = () => (
   <div className="flex-1 flex justify-center items-center text-white/70">
-    You did not create any events 
+    You did not create any events
   </div>
 );
 

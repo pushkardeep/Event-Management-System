@@ -41,19 +41,17 @@ const EventDashboard = () => {
     if (!user) return;
 
     const fetchEvents = async () => {
-      if (!events) {
-        dispatch(setLoading(true));
-        const { success, message } = await get_events(token, dispatch);
-        if (!success) {
-          dispatch(setIsToatOpen(true));
-          dispatch(setToastMessage(message));
-        }
-        dispatch(setLoading(false));
+      dispatch(setLoading(true));
+      const { success, message } = await get_events(token, dispatch);
+      if (!success) {
+        dispatch(setIsToatOpen(true));
+        dispatch(setToastMessage(message));
       }
+      dispatch(setLoading(false));
     };
 
     fetchEvents();
-  }, [user, events]);
+  }, [user]);
 
   useEffect(() => {
     dispatch(setDashboardOpen(false));

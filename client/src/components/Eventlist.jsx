@@ -18,7 +18,7 @@ function EventList({ events }) {
   }, [events, category, date]);
 
   return (
-    <div className="flex-1 relative">
+    <div className="w-full h-full relative">
       {filteredEvents?.length > 0 ? (
         <div className="w-full max-w-[1320px] mx-auto h-full grid grid-cols-1 min-[500px]:grid-cols-2 min-[1060px]:grid-cols-3 xl:grid-cols-4 gap-3 px-4 pb-4">
           {filteredEvents.map((event, index) => (

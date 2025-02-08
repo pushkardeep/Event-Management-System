@@ -1,39 +1,55 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import { sendEvent } from "../services/socket/socket";
 
-// componenets
+// Services
+import { sendEvent } from "../services/socket/socket";
+import { deleteEvent } from "../services/events/events.service";
+
+// Components
 import BigButton from "./commmon/BigButton";
+
+// Redux Actions
 import {
   setIsToatOpen,
   setLoading,
   setToastMessage,
 } from "../redux/slices/ui.slice";
 
-import { deleteEvent } from "../services/events/events.service";
-
 function EventCard({ data }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const token = localStorage.getItem("token");
 
+  // Redux State
   const { user } = useSelector((state) => state.user);
   const { isDeleteAble } = useSelector((state) => state.ui);
 
-  const handleClick = (id) => {
+  // Local State for Enrollment
+  const [isEnrolled, setIsEnrolled] = useState(false);
+
+  // Check if the user is already attending this event
+  useEffect(() => {
+    if (user?.attending?.includes(data?._id)) {
+      setIsEnrolled(true);
+    }
+  }, [user, data]);
+
+  // Handle Enroll / Cancel Enrollment
+  const handleEnrollment = (id) => {
     sendEvent("attendeeChanged", { id });
+
+    // Optimistically update UI
+    setIsEnrolled((prev) => !prev);
   };
 
+  // Handle Event Deletion
   const handleDelete = async (id) => {
-    // eventId
     dispatch(setLoading(true));
     const { message } = await deleteEvent(id, token, dispatch);
 
     dispatch(setIsToatOpen(true));
     dispatch(setToastMessage(message));
-
     dispatch(setLoading(false));
   };
 
@@ -73,7 +89,7 @@ function EventCard({ data }) {
         {/* Event Info */}
         <div className="mt-3 text-[11px] sm:text-xs text-gray-500 dark:text-gray-400 space-y-1">
           <p className="flex items-center">
-            📅
+            📅{" "}
             <span className="ml-2">
               {data?.date?.split("T")[0]} | {data?.time}
             </span>
@@ -86,28 +102,30 @@ function EventCard({ data }) {
           </p>
         </div>
 
-        {/* Enroll Button */}
-        {!isDeleteAble && (
-          <BigButton
-            callback={() =>
-              user?._id === data?.owner?._id
-                ? navigate("/user_events")
-                : handleClick(data?._id)
-            }
-            title={
-              user?._id === data?.owner?._id ? "Manage event" : "Enroll Now"
-            }
-            styles={"mt-4"}
-          />
-        )}
-
-        {isDeleteAble && (
-          <BigButton
-            callback={() => handleDelete(data?._id)}
-            title={"Delete Event"}
-            styles={"mt-4"}
-          />
-        )}
+        {/* Action Buttons */}
+        <div className="mt-4">
+          {!isDeleteAble ? (
+            <BigButton
+              callback={() =>
+                user?._id === data?.owner?._id
+                  ? navigate("/user_events")
+                  : handleEnrollment(data?._id)
+              }
+              title={
+                user?._id === data?.owner?._id
+                  ? "Manage event"
+                  : isEnrolled
+                  ? "Cancel Enrollment"
+                  : "Enroll Now"
+              }
+            />
+          ) : (
+            <BigButton
+              callback={() => handleDelete(data?._id)}
+              title={"Delete Event"}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

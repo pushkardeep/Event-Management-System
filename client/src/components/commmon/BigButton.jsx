@@ -5,7 +5,7 @@ function BigButton({ title, disabled = false, callback, styles }) {
     <button
       onClick={callback}
       disabled={disabled}
-      className={`text-white font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center transition-colors duration-200 
+      className={`text-white font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center  duration-200 transition-all active:scale-[0.9]
     ${
       disabled
         ? "bg-gray-500 cursor-not-allowed hover:bg-gray-500"

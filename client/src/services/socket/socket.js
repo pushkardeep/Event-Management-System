@@ -12,14 +12,15 @@ export const sendEvent = (event, data) => {
 export const listenForResponse = (dispatch) => {
   console.log("listening for events");
   socket.on("enrollmentResponse", (data) => {
-    if (!data.success) return handleErrors(data?.message, dispatch);
+    if (!data.success) return handleMessages(data?.message, dispatch);
+    handleMessages(data?.message, dispatch);
     dispatch(
       updateAttendees({ eventId: data?.eventId, attendees: data?.attendees })
     );
   });
 };
 
-const handleErrors = (message, dispatch) => {
+const handleMessages = (message, dispatch) => {
   dispatch(setToastMessage(message));
   dispatch(setIsToatOpen(true));
 };
