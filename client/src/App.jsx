@@ -14,6 +14,7 @@ import EventDashboard from "./pages/EventDashboard";
 import Register from "./pages/Register";
 import SignIn from "./pages/SignIn";
 import CreateEvent from "./pages/CreateEvent";
+import UserEvents from "./pages/UserEvents";
 
 function App() {
   const dispatch = useDispatch();
@@ -64,6 +65,14 @@ function App() {
           element={
             <ProtectedRoutes>
               <CreateEvent />
+            </ProtectedRoutes>
+          }
+        />
+        <Route
+          path="/user_events"
+          element={
+            <ProtectedRoutes>
+              <UserEvents />
             </ProtectedRoutes>
           }
         />

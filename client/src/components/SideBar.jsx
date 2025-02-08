@@ -86,6 +86,11 @@ function SideBar({ styles }) {
         <ul className="space-y-2 font-medium">
           <MenuItem to="/" icon={RiDashboard2Fill} label="Dashboard" />
           <MenuItem
+            to="/user_events"
+            icon={IoIosCreate}
+            label="Manage Events"
+          />
+          <MenuItem
             to="/create_event"
             icon={IoIosCreate}
             label="Create Events"

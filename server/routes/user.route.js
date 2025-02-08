@@ -9,11 +9,12 @@ const {
   guest_log_in,
 } = require("../controllers/user/auth.controller");
 
-const { profile } = require("../controllers/user/user.controller");
+const { profile, userEvents } = require("../controllers/user/user.controller");
 
 router.post("/register", register);
 router.post("/sign_in", sign_in);
 router.post("/guest_log_in", guest_log_in);
 router.get("/profile", isLoggedIn, profile);
+router.get("/user_events", isLoggedIn, userEvents);
 
 module.exports = router;

@@ -1,17 +1,40 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { sendEvent } from "../services/socket/socket";
 
 // componenets
 import BigButton from "./commmon/BigButton";
+import {
+  setIsToatOpen,
+  setLoading,
+  setToastMessage,
+} from "../redux/slices/ui.slice";
+
+import { deleteEvent } from "../services/events/events.service";
 
 function EventCard({ data }) {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const token = localStorage.getItem("token");
+
   const { user } = useSelector((state) => state.user);
+  const { isDeleteAble } = useSelector((state) => state.ui);
 
   const handleClick = (id) => {
     sendEvent("attendeeChanged", { id });
+  };
+
+  const handleDelete = async (id) => {
+    // eventId
+    dispatch(setLoading(true));
+    const { message } = await deleteEvent(id, token, dispatch);
+
+    dispatch(setIsToatOpen(true));
+    dispatch(setToastMessage(message));
+
+    dispatch(setLoading(false));
   };
 
   return (
@@ -64,15 +87,27 @@ function EventCard({ data }) {
         </div>
 
         {/* Enroll Button */}
-        <BigButton
-          callback={() =>
-            user?._id === data?.owner?._id
-              ? navigate("/create_event")
-              : handleClick(data?._id)
-          }
-          title={user?._id === data?.owner?._id ? "Manage event" : "Enroll Now"}
-          styles={"mt-4"}
-        />
+        {!isDeleteAble && (
+          <BigButton
+            callback={() =>
+              user?._id === data?.owner?._id
+                ? navigate("/user_events")
+                : handleClick(data?._id)
+            }
+            title={
+              user?._id === data?.owner?._id ? "Manage event" : "Enroll Now"
+            }
+            styles={"mt-4"}
+          />
+        )}
+
+        {isDeleteAble && (
+          <BigButton
+            callback={() => handleDelete(data?._id)}
+            title={"Delete Event"}
+            styles={"mt-4"}
+          />
+        )}
       </div>
     </div>
   );

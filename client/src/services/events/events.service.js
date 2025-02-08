@@ -1,4 +1,4 @@
-import { addEvents } from "../../redux/slices/events.slice";
+import { addEvents, removeUserEvents } from "../../redux/slices/events.slice";
 import { request } from "../../utils/axios";
 import { endpoints } from "../endpoints";
 
@@ -41,6 +41,28 @@ export const get_events = async (token, dispatch) => {
     dispatch(addEvents(events));
 
     return { success: true };
+  } catch (error) {
+    return { success: false, message: error.message | "Something went wrong" };
+  }
+};
+
+export const deleteEvent = async (id, token, dispatch) => {
+  try {
+    const { success, message } = await request(
+      undefined,
+      BASE_URL,
+      "DELETE",
+      `${endpoints.DELETE_EVENT}/${id}`,
+      token
+    );
+
+    if (!success) {
+      return { success: false, message: message || "Something went wrong" };
+    }
+
+    dispatch(removeUserEvents(id));
+
+    return { success: true, message: message };
   } catch (error) {
     return { success: false, message: error.message | "Something went wrong" };
   }

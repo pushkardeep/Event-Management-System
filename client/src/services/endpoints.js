@@ -5,4 +5,6 @@ export const endpoints = {
   PROFILE: "/user/profile",
   CREATE_EVENT: "/event/create",
   GET_EVENTS: "/event/get_events",
+  DELETE_EVENT: "/event/delete",
+  GET_USER_EVENTS: "/user/user_events",
 };

@@ -1,266 +1,84 @@
-## Modals
+# Event Management Server
 
-### User Modal
+## Overview
+This is the backend server for the Event Management application. It is built using Express.js and provides API endpoints for user authentication, event management, and real-time updates.
 
-The `user.modal.js` file defines the schema for the `User` model using Mongoose. This schema includes the following fields:
+## Features
+- **User Authentication**: Register, sign in, and guest login support.
+- **Event Management**: Create, read, and delete events.
+- **Protected Routes**: Uses middleware to secure routes.
+- **Real-Time Communication**: Utilizes socket.io for real-time updates.
+- **Cross-Origin Resource Sharing (CORS)**: Configured to allow requests from the client application.
 
-- `name`: A string representing the user's name. This field is required.
-- `email`: A string representing the user's email. This field is optional for guests.
-- `password`: A string representing the user's password. This field is optional for guests.
-- `location`: A string representing the user's location. This field is optional for guests.
-- `role`: A string representing the user's role, either "real" or "guest". This field has a default value of "real".
-- `events`: An array of ObjectIds referencing the `Event` model. This field has a default value of an empty array.
-- `attending`: An array of ObjectIds referencing the `Event` model. This field has a default value of an empty array.
+## Tech Stack
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB
+- **Real-Time Communication**: socket.io
+- **Security**: JWT Authentication, CORS
 
-The `User` model is created using this schema and exported for use in other parts of the application.
+## Installation
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/your-repo/event-management-server.git
+   ```
+2. Navigate to the project directory:
+   ```sh
+   cd event-management-server
+   ```
+3. Install dependencies:
+   ```sh
+   npm install
+   ```
+4. Start the server:
+   ```sh
+   npm start
+   ```
 
-### Event Modal
+## API Endpoints
+### User Routes (`/user`)
+- **Register**: `POST /register`
+- **Sign In**: `POST /sign_in`
+- **Guest Login**: `POST /guest_log_in`
+- **Get Profile**: `GET /profile` (protected)
+- **Get User Events**: `GET /user_events` (protected)
 
-The `event.modal.js` file defines the schema for the `Event` model using Mongoose. This schema includes the following fields:
+### Event Routes (`/event`)
+- **Get Events**: `GET /get_events` (protected)
+- **Create Event**: `POST /create` (protected)
+- **Delete Event**: `DELETE /delete/:eventId` (protected)
 
-- `cover`: A string representing the cover image URL for the event. This field is required.
-- `title`: A string representing the title of the event. This field is required.
-- `description`: A string representing the description of the event. This field is required.
-- `location`: A string representing the location of the event. This field is required.
-- `date`: A date representing the date of the event. This field is required.
-- `time`: A string representing the time of the event. This field is required.
-- `category`: A string representing the category of the event. This field is required and can be one of the following values: "music", "sport", "art", "theater", "cinema", "other".
-- `status`: A string representing the status of the event. This field has a default value of "wait" and can be one of the following values: "wait", "live", "canceled".
-- `attendees`: A number representing the number of attendees for the event. This field has a default value of 0.
-- `owner`: An ObjectId referencing the `User` model. This field is required.
+## WebSockets
+This server uses `socket.io` to enable real-time communication.
 
-The `Event` model is created using this schema and exported for use in other parts of the application.
+- **Socket Configuration**: Defined in `configurations/socket.config.js`.
+- **Real-Time Features**:
+  - Updates on attendee status.
+  - Instant notifications for event actions.
+- **Usage**:
+  - The server listens for client connections and emits event updates.
+  - Ensure the client connects to the correct `SOCKET_URL`.
 
-## Authentication
+## Middleware
+- **isLoggedIn**: Ensures only authenticated users can access protected routes.
 
-### Register
-
-To register a new user, make a POST request to `/user/register` with the following fields in the request body:
-
-- `name`: The name of the user (required)
-- `email`: The email address of the user (required)
-- `location`: The location of the user (required)
-- `password`: The password for the user account (required)
-
-Example request body:
-
-```json
-{
-  "name": "John Doe",
-  "email": "john.doe@example.com",
-  "location": "New York",
-  "password": "yourpassword"
-}
+## Environment Variables
+Create a `.env` file in the root directory and add the following variables:
+```
+JWT_SECRET=event_management_system
+PORT=3000
+MONGO_URI=mongodb://127.0.0.1:27017/event_management_system
+CLIENT_URI=http://localhost:5173
 ```
 
-#### Responses
+## Usage
+1. Start the server using `npm start`.
+2. Use Postman or a frontend client to interact with the API.
+3. Manage users and events with CRUD operations.
+4. View real-time updates using socket.io.
 
-- **200 OK**: Registration successful. Returns a JSON object with a success message, user data, and a JWT token.
-  ```json
-  {
-    "success": true,
-    "user": {userData},
-    "token": "your.jwt.token"
-  }
-  ```
-- **400 Bad Request**: Registration failed due to missing fields, user already exists, or encryption error. Returns a JSON object with an error message.
-  ```json
-  {
-    "success": false,
-    "message": "Error message"
-  }
-  ```
-- **500 Internal Server Error**: Registration failed due to a server error. Returns a JSON object with an error message.
-  ```json
-  {
-    "success": false,
-    "message": "Internal server error"
-  }
-  ```
+## Contributing
+Feel free to contribute by submitting issues or pull requests.
 
-### Sign In
+## License
+This project is licensed under the MIT License.
 
-To sign in an existing user, make a POST request to `/user/sign_in` with the following fields in the request body:
-
-- `email`: The email address of the user (required)
-- `password`: The password for the user account (required)
-
-Example request body:
-
-```json
-{
-  "email": "john.doe@example.com",
-  "password": "yourpassword"
-}
-```
-
-#### Responses
-
-- **200 OK**: Sign in successful. Returns a JSON object with a success message, user data, and a JWT token.
-  ```json
-  {
-    "success": true,
-    "user": {userData},
-    "token": "your.jwt.token"
-  }
-  ```
-- **400 Bad Request**: Sign in failed due to missing fields, user not found, invalid credentials, or token generation error. Returns a JSON object with an error message.
-  ```json
-  {
-    "success": false,
-    "message": "Error message"
-  }
-  ```
-- **500 Internal Server Error**: Sign in failed due to a server error. Returns a JSON object with an error message.
-  ```json
-  {
-    "success": false,
-    "message": "Internal server error"
-  }
-  ```
-
-### Guest Login
-
-To log in as a guest, make a POST request to `/user/guest_log_in`.
-
-#### Responses
-
-- **200 OK**: Guest login successful. Returns a JSON object with a success message, user data, and a JWT token.
-  ```json
-  {
-    "success": true,
-    "user": {userData},
-    "token": "your.jwt.token"
-  }
-  ```
-- **400 Bad Request**: Guest login failed due to guest creation error. Returns a JSON object with an error message.
-  ```json
-  {
-    "success": false,
-    "message": "Error message"
-  }
-  ```
-- **500 Internal Server Error**: Guest login failed due to a server error. Returns a JSON object with an error message.
-  ```json
-  {
-    "success": false,
-    "message": "Internal server error"
-  }
-  ```
-
-## Event Management
-
-### Create Event
-
-To create a new event, make a POST request to `/event/create` with the following fields in the request body:
-
-- `cover`: The cover image URL for the event (required)
-- `title`: The title of the event (required)
-- `description`: The description of the event (required)
-- `location`: The location of the event (required)
-- `date`: The date of the event (required)
-- `time`: The time of the event (required)
-- `category`: The category of the event (required)
-
-Example request body:
-
-```json
-{
-  "cover": "http://example.com/cover.jpg",
-  "title": "Sample Event",
-  "description": "This is a sample event.",
-  "location": "New York",
-  "date": "2023-12-31",
-  "time": "18:00",
-  "category": "music"
-}
-```
-
-#### Responses
-
-- **200 OK**: Event creation successful. Returns a JSON object with a success message and event data.
-  ```json
-  {
-    "success": true,
-    "event": {eventData},
-    "message": "Event created successfully"
-  }
-  ```
-- **400 Bad Request**: Event creation failed due to missing fields or user not found. Returns a JSON object with an error message.
-  ```json
-  {
-    "success": false,
-    "message": "Error message"
-  }
-  ```
-- **500 Internal Server Error**: Event creation failed due to a server error. Returns a JSON object with an error message.
-  ```json
-  {
-    "success": false,
-    "message": "Internal server error"
-  }
-  ```
-
-### Delete Event
-
-To delete an existing event, make a DELETE request to `/event/delete/:eventId` with the following parameter:
-
-- `eventId`: The ID of the event to be deleted (required)
-
-Example request URL:
-
-```
-/event/delete/60d21b4667d0d8992e610c85
-```
-
-#### Responses
-
-- **200 OK**: Event deletion successful. Returns a JSON object with a success message.
-  ```json
-  {
-    "success": true,
-    "message": "Event deleted successfully"
-  }
-  ```
-- **400 Bad Request**: Event deletion failed due to missing event ID, event not found, or user not found. Returns a JSON object with an error message.
-  ```json
-  {
-    "success": false,
-    "message": "Error message"
-  }
-  ```
-- **500 Internal Server Error**: Event deletion failed due to a server error. Returns a JSON object with an error message.
-  ```json
-  {
-    "success": false,
-    "message": "Internal server error"
-  }
-  ```
-
-### Read Events
-
-To read all events, make a GET request to `/event/get_events`.
-
-#### Responses
-
-- **200 OK**: Events retrieved successfully. Returns a JSON object with a success message and an array of events.
-  ```json
-  {
-    "success": true,
-    "events": [{eventData1}, {eventData2}, ...]
-  }
-  ```
-- **400 Bad Request**: Events retrieval failed due to user not found. Returns a JSON object with an error message.
-  ```json
-  {
-    "success": false,
-    "message": "User not found"
-  }
-  ```
-- **500 Internal Server Error**: Events retrieval failed due to a server error. Returns a JSON object with an error message.
-  ```json
-  {
-    "success": false,
-    "message": "Internal server error"
-  }
-  ```

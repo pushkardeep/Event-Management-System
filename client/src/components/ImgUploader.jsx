@@ -5,7 +5,7 @@ import { imgUploader } from "../services/cloudinary/img_uploading.service";
 // Redux Actions
 import { setToastMessage, setIsToatOpen } from "../redux/slices/ui.slice";
 
-const ImageUploader = ({ formData, setFormData }) => {
+const ImageUploader = ({ cover, setCover }) => {
   const dispatch = useDispatch();
   const [isImgUploading, setImgUploading] = useState(false);
 
@@ -22,7 +22,7 @@ const ImageUploader = ({ formData, setFormData }) => {
       }
 
       setImgUploading(false);
-      setFormData({ ...formData, cover: url });
+      setCover(url);
     }
   };
 
@@ -38,7 +38,7 @@ const ImageUploader = ({ formData, setFormData }) => {
         id="imageUpload"
         onChange={handleImageChange}
       />
-      {!formData?.cover && !isImgUploading && (
+      {!cover && !isImgUploading && (
         <label
           htmlFor="imageUpload"
           className="cursor-pointer bg-gray-700 hover:bg-gray-800 text-white text-sm rounded-lg px-4 py-5 block text-center border-2 border-gray-500 border-dashed"
@@ -47,14 +47,14 @@ const ImageUploader = ({ formData, setFormData }) => {
         </label>
       )}
 
-      {!formData?.cover && isImgUploading && (
+      {!cover && isImgUploading && (
         <div className=" bg-gray-700 text-white text-sm rounded-lg px-4 py-5 block text-center border-2 border-gray-500 border-dashed">
           <div className="mx-auto w-8 h-8 border-4 border-white/40 border-t-blue-600 animate-spin rounded-full"></div>
         </div>
       )}
-      {formData?.cover && (
+      {cover && (
         <img
-          src={formData?.cover}
+          src={cover}
           alt="Preview"
           className="mt-2 rounded-lg w-full h-50 object-cover"
         />

@@ -14,7 +14,7 @@ import Eventlist from "../components/Eventlist";
 import Dashboard from "../components/commmon/Dashboard";
 
 // Services & Redux
-import { get_events } from "../services/events/events.service";
+import { userEvents } from "../services/user/user.service";
 import { setDate } from "../redux/slices/Filter.slice";
 import {
   setDashboardOpen,
@@ -25,13 +25,13 @@ import {
   setIsDeleteAble,
 } from "../redux/slices/ui.slice";
 
-const EventDashboard = () => {
+const UserEvents = () => {
   const dispatch = useDispatch();
   const dateInputRef = useRef();
 
   // Redux Selectors
   const { isToastOpen, isFilterBoxOpen } = useSelector((state) => state.ui);
-  const { events } = useSelector((state) => state.events);
+  const { user_events } = useSelector((state) => state.events);
   const { date, category } = useSelector((state) => state.filter);
   const { user } = useSelector((state) => state.user);
   const token = localStorage.getItem("token");
@@ -41,9 +41,9 @@ const EventDashboard = () => {
     if (!user) return;
 
     const fetchEvents = async () => {
-      if (!events) {
+      if (!user_events) {
         dispatch(setLoading(true));
-        const { success, message } = await get_events(token, dispatch);
+        const { success, message } = await userEvents(token, dispatch);
         if (!success) {
           dispatch(setIsToatOpen(true));
           dispatch(setToastMessage(message));
@@ -53,20 +53,20 @@ const EventDashboard = () => {
     };
 
     fetchEvents();
-  }, [user, events]);
+  }, [user, user_events]);
 
   useEffect(() => {
     dispatch(setDashboardOpen(false));
-    dispatch(setIsDeleteAble(false));
+    dispatch(setIsDeleteAble(true));
   }, []);
 
   return (
     <Dashboard>
       <div className="w-full h-full flex flex-col overflow-y-auto">
         {isToastOpen && <Toast Icon={MdError} />}
-        <Navbar events={events} dateInputRef={dateInputRef} />
-        {events?.length > 0 ? (
-          <EventContent events={events} dateInputRef={dateInputRef} />
+        <Navbar events={user_events} dateInputRef={dateInputRef} />
+        {user_events?.length > 0 ? (
+          <EventContent events={user_events} dateInputRef={dateInputRef} />
         ) : (
           <EmptyState />
         )}
@@ -130,8 +130,8 @@ const EventContent = ({ events, dateInputRef }) => (
 // Empty State
 const EmptyState = () => (
   <div className="flex-1 flex justify-center items-center text-white/70">
-    No events available
+    You did not create any events 
   </div>
 );
 
-export default EventDashboard;
+export default UserEvents;

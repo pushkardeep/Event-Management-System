@@ -22,10 +22,10 @@ import {
   setToastMessage,
   setIsToatOpen,
   setDashboardOpen,
+  setIsDeleteAble,
 } from "../redux/slices/ui.slice";
 
 const initialFormData = {
-  cover: "",
   title: "",
   description: "",
   location: "",
@@ -34,13 +34,20 @@ const initialFormData = {
   category: "",
 };
 
-const EventForm = ({ formData, setFormData, onSubmit, isApproved }) => {
+const EventForm = ({
+  cover,
+  setCover,
+  formData,
+  setFormData,
+  onSubmit,
+  isApproved,
+}) => {
   return (
     <form
       onSubmit={onSubmit}
       className="w-full max-w-[400px] mx-auto border border-gray-700 bg-gray-800 rounded-xl p-3"
     >
-      <ImgUploader formData={formData} setFormData={setFormData} />
+      <ImgUploader cover={cover} setCover={setCover} />
       <FormInput
         label="Event Title"
         type="text"
@@ -100,11 +107,15 @@ function CreateEvent() {
   const token = localStorage.getItem("token");
   const { isToastOpen, isFilterBoxOpen } = useSelector((state) => state.ui);
   const [formData, setFormData] = useState(initialFormData);
+  const [cover, setCover] = useState(null);
   const [isApproved, setIsApproved] = useState(false);
 
   useEffect(() => {
-    setIsApproved(Object.values(formData).every((field) => field !== ""));
-  }, [formData]);
+    setIsApproved(
+      cover !== null &&
+        Object.values(formData).every((field) => field.trim() !== "")
+    );
+  }, [formData, cover]);
 
   const onFormSubmit = async (e) => {
     e.preventDefault();
@@ -113,8 +124,22 @@ function CreateEvent() {
     dispatch(setLoading(false));
     dispatch(setToastMessage(message));
     dispatch(setIsToatOpen(true));
-    if (success) setFormData(initialFormData);
+    if (success) {
+      setFormData(initialFormData);
+      setCover(null);
+    }
   };
+
+  useEffect(() => {
+    if (cover) {
+      setFormData((prev) => ({ ...prev, cover }));
+    }
+  }, [cover]);
+
+  useEffect(() => {
+    dispatch(setDashboardOpen(false));
+    dispatch(setIsDeleteAble(false));
+  }, []);
 
   return (
     <Dashboard>
@@ -129,6 +154,8 @@ function CreateEvent() {
           />
         </div>
         <EventForm
+          cover={cover}
+          setCover={setCover}
           formData={formData}
           setFormData={setFormData}
           onSubmit={onFormSubmit}

@@ -9,7 +9,7 @@ function Toast({ Icon }) {
   const dispatch = useDispatch();
   const { toastMessage } = useSelector((state) => state.ui);
   return (
-    <div className="flex items-center w-full max-w-xs p-4 text-gray-400 bg-gray-800 rounded-lg shadow-lg absolute top-10 z-50 left-1/2 -translate-x-1/2">
+    <div className="flex items-center w-full max-w-xs p-4 text-gray-400 bg-gray-800 rounded-lg shadow-lg fixed top-10 left-[50%] -translate-x-[50%] z-50">
       <Icon className="w-5 h-5" />
       <div className="ms-3 text-sm font-normal">{toastMessage}</div>
       <button

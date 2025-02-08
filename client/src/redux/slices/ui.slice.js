@@ -8,6 +8,7 @@ const uiSlice = createSlice({
     toastMessage: "",
     isToastOpen: false,
     isFilterBoxOpen: false,
+    isDeleteAble: false,
   },
   reducers: {
     setLoading: (state, action) => {
@@ -28,10 +29,20 @@ const uiSlice = createSlice({
     setIsFilterBoxOpen: (state, action) => {
       state.isFilterBoxOpen = action.payload;
     },
+
+    setIsDeleteAble: (state, action) => {
+      state.isDeleteAble = action.payload;
+    },
   },
 });
 
-export const { setLoading, setDashboardOpen, setToastMessage, setIsToatOpen, setIsFilterBoxOpen } =
-  uiSlice.actions;
+export const {
+  setLoading,
+  setDashboardOpen,
+  setToastMessage,
+  setIsToatOpen,
+  setIsFilterBoxOpen,
+  setIsDeleteAble,
+} = uiSlice.actions;
 
 export default uiSlice.reducer;

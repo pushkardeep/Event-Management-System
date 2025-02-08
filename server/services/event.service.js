@@ -85,7 +85,7 @@ const update = async (eventId, userId) => {
     const updatedUser = await userModal.findByIdAndUpdate(
       userId,
       {
-        [isEventInUser ? "$pull" : "$push"]: { attendingEvents: eventId },
+        [isEventInUser ? "$pull" : "$push"]: { attending: eventId },
       },
       { new: true }
     );

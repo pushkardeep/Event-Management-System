@@ -4,10 +4,21 @@ const eventsSlice = createSlice({
   name: "events",
   initialState: {
     events: null,
+    user_events: null,
   },
   reducers: {
     addEvents: (state, action) => {
       state.events = action.payload;
+    },
+
+    addUserEvents: (state, action) => {
+      state.user_events = action.payload;
+    },
+
+    removeUserEvents: (state, action) => {
+      state.user_events = state.user_events.filter(
+        (e, i) => action.payload !== e._id
+      );
     },
 
     updateAttendees: (state, action) => {
@@ -23,5 +34,6 @@ const eventsSlice = createSlice({
   },
 });
 
-export const { addEvents, updateAttendees } = eventsSlice.actions;
+export const { addEvents, addUserEvents, updateAttendees, removeUserEvents } =
+  eventsSlice.actions;
 export default eventsSlice.reducer;

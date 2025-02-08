@@ -10,7 +10,7 @@ function Dashboard({ children }) {
 
   return (
     <div className="w-screen h-screen bg-gray-900 relative">
-      <div className="w-screen h-screen flex">
+      <div className="w-screen h-screen relative flex">
         {/* for pc and tabs */}
         <SideBar styles={"hidden md:block"} />
         {/* for mobils  */}
