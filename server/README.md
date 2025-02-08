@@ -19,11 +19,11 @@ This is the backend server for the Event Management application. It is built usi
 ## Installation
 1. Clone the repository:
    ```sh
-   git clone https://github.com/your-repo/event-management-server.git
+   https://github.com/pushkardeep/Event-Management-System.git
    ```
 2. Navigate to the project directory:
    ```sh
-   cd event-management-server
+   cd server
    ```
 3. Install dependencies:
    ```sh
@@ -31,7 +31,7 @@ This is the backend server for the Event Management application. It is built usi
    ```
 4. Start the server:
    ```sh
-   npm start
+   npx nodemon
    ```
 
 ## API Endpoints
