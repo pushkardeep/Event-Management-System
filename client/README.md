@@ -1,9 +1,11 @@
 # Event Management App
 
 ## Overview
+
 This is a React-based Event Management application that allows users to register, sign in, create events, and view their own events. The app features protected routes, socket communication, and state management with Redux.
 
 ## Features
+
 - **User Authentication**: Users can register and sign in to access protected features.
 - **Protected Routes**: Certain routes are only accessible to authenticated users.
 - **Event Management**: Users can create, update, delete, and manage events.
@@ -12,11 +14,13 @@ This is a React-based Event Management application that allows users to register
 - **Image Uploads**: Uses Cloudinary for handling image uploads.
 
 ## Tech Stack
+
 - **Frontend**: React, React Router, Redux
 - **Real-time Communication**: socket.io
 - **Image Uploads**: Cloudinary
 
 ## Installation
+
 1. Clone the repository:
    ```sh
    git clone https://github.com/your-repo/event-management-app.git
@@ -35,6 +39,7 @@ This is a React-based Event Management application that allows users to register
    ```
 
 ## Project Structure
+
 ```
 📂 src
  ├── 📂 components      # Reusable UI components
@@ -46,6 +51,7 @@ This is a React-based Event Management application that allows users to register
 ```
 
 ## API Endpoints
+
 ```javascript
 export const endpoints = {
   LOG_IN: "/user/sign_in",
@@ -60,6 +66,7 @@ export const endpoints = {
 ```
 
 ## Event CRUD Operations
+
 - **Create Event**: Users can create events using the `/event/create` endpoint.
 - **Read Events**: Users can retrieve a list of events using `/event/get_events`.
 - **Update Event**: Users can update their events (endpoint to be defined).
@@ -67,6 +74,7 @@ export const endpoints = {
 - **User-Specific Events**: Users can view their own events using `/user/user_events`.
 
 ## Usage
+
 1. Run the application using `npm run dev`.
 2. Register a new user or sign in with existing credentials.
 3. Create and manage events in the dashboard.
@@ -74,7 +82,9 @@ export const endpoints = {
 5. Upload images using Cloudinary.
 
 ## Environment Variables
+
 Create a `.env` file in the root directory and add the following variables:
+
 ```
 VITE_BASE_URL=http://localhost:3000
 VITE_CLOUD_NAME=da2o22xsg
@@ -85,8 +95,9 @@ REACT_APP_CLOUDINARY_URL=<your-cloudinary-url>
 ```
 
 ## Contributing
+
 Feel free to contribute by submitting issues or pull requests.
 
 ## License
-This project is licensed under the MIT License.
 
+This project is licensed under the MIT License.

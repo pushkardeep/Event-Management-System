@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RiDashboard2Fill } from "react-icons/ri";
 import { IoIosCreate } from "react-icons/io";
 import { IoLogOut, IoCloseOutline } from "react-icons/io5";
+import { SiNginxproxymanager } from "react-icons/si";
 
 // Redux Actions
 import { setDashboardOpen, setLoading } from "../redux/slices/ui.slice";
@@ -87,7 +88,7 @@ function SideBar({ styles }) {
           <MenuItem to="/" icon={RiDashboard2Fill} label="Dashboard" />
           <MenuItem
             to="/user_events"
-            icon={IoIosCreate}
+            icon={SiNginxproxymanager}
             label="Manage Events"
           />
           <MenuItem
