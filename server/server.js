@@ -1,6 +1,13 @@
 const express = require("express");
 const app = express();
 
+// creating server
+const http = require("http");
+const server = http.createServer(app);
+
+// socket.io
+require("./configurations/socket.config")(server);
+
 const cors = require("cors");
 
 const userRouter = require("./routes/user.route");
@@ -19,4 +26,4 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/user", userRouter);
 app.use("/event", eventRouter);
 
-module.exports = app;
+module.exports = server;

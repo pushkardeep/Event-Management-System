@@ -13,7 +13,6 @@ const createEvent = async (req, res) => {
       location,
       date,
       time,
-      status,
     } = req.body;
 
     if (
@@ -23,8 +22,7 @@ const createEvent = async (req, res) => {
       !category ||
       !location ||
       !date ||
-      !time ||
-      !status
+      !time
     ) {
       return res
         .status(400)
@@ -55,7 +53,6 @@ const createEvent = async (req, res) => {
       location,
       date,
       time,
-      status,
       user._id
     );
 
@@ -185,62 +182,4 @@ const readEventS = async (req, res) => {
   }
 };
 
-const updateStatus = async (req, res) => {
-  try {
-    const { eventId } = req.params;
-
-    if (!eventId) {
-      return res.status(400).json({
-        success: false,
-        message: "Event not found",
-      });
-    }
-
-    const { status } = req.body;
-
-    if (!status) {
-      return res.status(400).json({
-        success: false,
-        message: "Please choose a status",
-      });
-    }
-
-    const user = req.user;
-
-    if (!user) {
-      return res.status(400).json({
-        success: false,
-        message: "User not found",
-      });
-    }
-
-    if (user?.role === "guest") {
-      return res.status(400).json({
-        success: false,
-        message: "Guests cannot create events",
-      });
-    }
-
-    const { event, success, message } = await update(eventId, status);
-
-    if (!success) {
-      return res.status(400).json({
-        success: false,
-        message: message || "Error in updating event",
-      });
-    }
-
-    return res.status(200).json({
-      success: true,
-      event,
-      message: "Event updated successfully",
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message || "Internal server error",
-    });
-  }
-};
-
-module.exports = { createEvent, readEventS, deleteEvent, updateStatus };
+module.exports = { createEvent, readEventS, deleteEvent };

@@ -1,121 +1,103 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-// components
+// Components
 import BigButton from "../components/commmon/BigButton";
-import GuestLogInBar from "../components/commmon/GuestLogInBar";
+import GuestLogInBar from "..//components/commmon/GuestLogInBar";
 import Toast from "../components/commmon/Toast";
 import ScLoader from "../components/commmon/ScLoader";
+import FormInput from "../components/commmon/FormInput";
 
-// services
+// Services
 import { log_in } from "../services/auth/auth.service";
 
-// icons
+// Icons
 import { MdError } from "react-icons/md";
+
+// Redux Actions
+import {
+  setLoading,
+  setToastMessage,
+  setIsToatOpen,
+} from "../redux/slices/ui.slice";
+
+const initialFormData = { email: "", password: "" };
+
+const SignInForm = ({ formData, setFormData, onSubmit, isApproved }) => {
+  return (
+    <form
+      onSubmit={onSubmit}
+      className="w-full max-w-[400px] border border-gray-700 bg-gray-800 rounded-xl p-4"
+    >
+      <FormInput
+        label="Your Email"
+        type="email"
+        required
+        value={formData.email}
+        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+        placeholder="name@example.com"
+      />
+      <FormInput
+        label="Your Password"
+        type="password"
+        required
+        value={formData.password}
+        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+        placeholder="********"
+      />
+      <BigButton title="Log in" disabled={!isApproved} />
+      <div className="mt-3 text-white text-sm text-center">
+        <span>Don't have an account?</span>
+        <Link
+          to="/register"
+          className="text-blue-500 font-semibold ml-1.5 hover:text-blue-600"
+        >
+          Register
+        </Link>
+      </div>
+      <span className="block text-[#fff]/30 text-xs text-center mt-1">Or</span>
+      <GuestLogInBar />
+    </form>
+  );
+};
 
 function SignIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { isLoading, isToastOpen } = useSelector((state) => state.ui);
 
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  const [formData, setFormData] = useState(initialFormData);
   const [isApproved, setIsApproved] = useState(false);
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+
+  useEffect(() => {
+    setIsApproved(Object.values(formData).every((field) => field !== ""));
+  }, [formData]);
 
   const onFormSubmit = async (e) => {
     e.preventDefault();
-
-    setLoading(true);
+    dispatch(setLoading(true));
     const { success, message } = await log_in(formData, dispatch, navigate);
-
+    dispatch(setLoading(false));
     if (!success) {
-      setMessage(message);
+      dispatch(setToastMessage(message));
+      dispatch(setIsToatOpen(true));
+      return;
     }
 
-    setLoading(false);
-    setFormData({
-      email: "",
-      password: "",
-    });
+    setFormData(initialFormData);
   };
 
-  useEffect(() => {
-    if (formData.email && formData.password) {
-      setIsApproved(true);
-    } else {
-      setIsApproved(false);
-    }
-  }, [formData]);
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-900 p-4">
-      {message && <Toast message={message} Icon={MdError} />}
-      <form
+      {isToastOpen && <Toast Icon={MdError} />}
+      <SignInForm
+        formData={formData}
+        setFormData={setFormData}
         onSubmit={onFormSubmit}
-        className="w-full max-w-[400px] border border-gray-700 bg-gray-800 rounded-xl p-4"
-      >
-        <div className="mb-3">
-          <label
-            htmlFor="email"
-            className="block mb-2 text-sm font-medium text-white"
-          >
-            Your email
-          </label>
-          <input
-            type="email"
-            className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5 placeholder-gray-400"
-            placeholder="name@flowbite.com"
-            value={formData.email}
-            onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
-            required
-          />
-        </div>
-
-        <div className="mb-3">
-          <label
-            htmlFor="password"
-            className="block mb-2 text-sm font-medium text-white"
-          >
-            Your password
-          </label>
-          <input
-            type="password"
-            className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5 placeholder-gray-400"
-            placeholder="********"
-            value={formData.password}
-            onChange={(e) =>
-              setFormData({ ...formData, password: e.target.value })
-            }
-            required
-          />
-        </div>
-        <BigButton title="Log in" disabled={!isApproved} />
-
-        <div className="mt-3 text-white text-sm text-center">
-          <span>Don't have any account :</span>
-          <span>
-            <Link
-              to={"/register"}
-              className="text-blue-500 font-semibold ml-1.5 hover:text-blue-600"
-            >
-              Register
-            </Link>
-          </span>
-        </div>
-        <span className="block text-[#fff]/30 text-xs text-center mt-1">
-          Or
-        </span>
-        <GuestLogInBar
-          setErrorMessage={setMessage}
-          setLoadingState={setLoading}
-        />
-      </form>
-      {loading && <ScLoader />}
+        isApproved={isApproved}
+      />
+      {isLoading && <ScLoader />}
     </div>
   );
 }

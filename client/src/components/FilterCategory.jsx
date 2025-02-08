@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { setCategory } from "../redux/slices/Filter.slice";
+import { setIsFilterBoxOpen } from "../redux/slices/ui.slice";
 
 // Icons
 import { FaMusic, FaPaintBrush, FaFootballBall } from "react-icons/fa";
@@ -14,13 +15,13 @@ const categories = [
   { label: "Others", value: "other", Icon: RiPsychotherapyFill },
 ];
 
-const FilterCategory = ({ openState }) => {
+const FilterCategory = () => {
   const dispatch = useDispatch();
   const { category } = useSelector((state) => state.filter);
 
   const handleClick = (value) => {
     dispatch(setCategory(value));
-    openState(false);
+    dispatch(setIsFilterBoxOpen(false));
   };
 
   return (

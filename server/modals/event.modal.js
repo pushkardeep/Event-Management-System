@@ -30,16 +30,13 @@ const eventSchema = new mongoose.Schema({
     enum: ["music", "sport", "art", "other"],
     required: true,
   },
-  status: {
-    type: String,
-    enum: ["wait", "live", "cancled"],
-    default: "wait",
-    required: true,
-  },
-  attendees: {
-    type: Number,
-    default: 0,
-  },
+  attendees: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: [],
+    },
+  ],
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

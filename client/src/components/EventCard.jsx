@@ -1,7 +1,19 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import { sendEvent } from "../services/socket/socket";
+
+// componenets
 import BigButton from "./commmon/BigButton";
 
 function EventCard({ data }) {
+  const navigate = useNavigate();
+  const { user } = useSelector((state) => state.user);
+
+  const handleClick = (id) => {
+    sendEvent("attendeeChanged", { id });
+  };
+
   return (
     <div className="w-full max-h-fit border rounded-lg shadow-md bg-gray-800 border-gray-700 hover:bg-gray-700 transition-all p-3">
       {/* Event Image */}
@@ -47,12 +59,20 @@ function EventCard({ data }) {
             📍 <span className="ml-2">{data?.location}</span>
           </p>
           <p className="flex items-center">
-            👥 <span className="ml-2">{data?.attendees} Attendees</span>
+            👥 <span className="ml-2">{data?.attendees?.length} Attendees</span>
           </p>
         </div>
 
         {/* Enroll Button */}
-        <BigButton title={"Enroll Now"} styles={"mt-4"} />
+        <BigButton
+          callback={() =>
+            user?._id === data?.owner?._id
+              ? navigate("/create_event")
+              : handleClick(data?._id)
+          }
+          title={user?._id === data?.owner?._id ? "Manage event" : "Enroll Now"}
+          styles={"mt-4"}
+        />
       </div>
     </div>
   );

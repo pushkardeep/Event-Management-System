@@ -36,12 +36,14 @@ The `Event` model is created using this schema and exported for use in other par
 ### Register
 
 To register a new user, make a POST request to `/user/register` with the following fields in the request body:
+
 - `name`: The name of the user (required)
 - `email`: The email address of the user (required)
 - `location`: The location of the user (required)
 - `password`: The password for the user account (required)
 
 Example request body:
+
 ```json
 {
   "name": "John Doe",
@@ -79,10 +81,12 @@ Example request body:
 ### Sign In
 
 To sign in an existing user, make a POST request to `/user/sign_in` with the following fields in the request body:
+
 - `email`: The email address of the user (required)
 - `password`: The password for the user account (required)
 
 Example request body:
+
 ```json
 {
   "email": "john.doe@example.com",
@@ -149,6 +153,7 @@ To log in as a guest, make a POST request to `/user/guest_log_in`.
 ### Create Event
 
 To create a new event, make a POST request to `/event/create` with the following fields in the request body:
+
 - `cover`: The cover image URL for the event (required)
 - `title`: The title of the event (required)
 - `description`: The description of the event (required)
@@ -158,6 +163,7 @@ To create a new event, make a POST request to `/event/create` with the following
 - `category`: The category of the event (required)
 
 Example request body:
+
 ```json
 {
   "cover": "http://example.com/cover.jpg",
@@ -198,9 +204,11 @@ Example request body:
 ### Delete Event
 
 To delete an existing event, make a DELETE request to `/event/delete/:eventId` with the following parameter:
+
 - `eventId`: The ID of the event to be deleted (required)
 
 Example request URL:
+
 ```
 /event/delete/60d21b4667d0d8992e610c85
 ```
@@ -222,43 +230,6 @@ Example request URL:
   }
   ```
 - **500 Internal Server Error**: Event deletion failed due to a server error. Returns a JSON object with an error message.
-  ```json
-  {
-    "success": false,
-    "message": "Internal server error"
-  }
-  ```
-
-### Update Event Status
-
-To update the status of an existing event, make a PATCH request to `/event/update/:eventId` with the following fields in the request body:
-- `status`: The new status of the event (required). It can be one of the following values: "wait", "live", "canceled".
-
-Example request body:
-```json
-{
-  "status": "live"
-}
-```
-
-#### Responses
-
-- **200 OK**: Event status update successful. Returns a JSON object with a success message and updated event data.
-  ```json
-  {
-    "success": true,
-    "event": {eventData},
-    "message": "Event updated successfully"
-  }
-  ```
-- **400 Bad Request**: Event status update failed due to missing fields, event not found, or user not found. Returns a JSON object with an error message.
-  ```json
-  {
-    "success": false,
-    "message": "Error message"
-  }
-  ```
-- **500 Internal Server Error**: Event status update failed due to a server error. Returns a JSON object with an error message.
   ```json
   {
     "success": false,

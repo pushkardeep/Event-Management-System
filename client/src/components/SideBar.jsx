@@ -1,73 +1,98 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
-// icons
+// Icons
 import { RiDashboard2Fill } from "react-icons/ri";
-import { MdOutlineEventAvailable } from "react-icons/md";
 import { IoIosCreate } from "react-icons/io";
-import { IoLogOut } from "react-icons/io5";
+import { IoLogOut, IoCloseOutline } from "react-icons/io5";
 
-function SideBar() {
+// Redux Actions
+import { setDashboardOpen, setLoading } from "../redux/slices/ui.slice";
+
+// Services
+import { profile } from "../services/user/user.service";
+
+const MenuItem = ({ to, icon: Icon, label, onClick }) => (
+  <li>
+    {to ? (
+      <Link
+        to={to}
+        className="flex items-center p-2 rounded-lg text-white hover:bg-gray-700 group"
+      >
+        <Icon className="w-6 h-6 transition duration-75 text-gray-400 group-hover:text-white" />
+        <span className="ml-2">{label}</span>
+      </Link>
+    ) : (
+      <button
+        onClick={onClick}
+        className="w-full flex items-center p-2 rounded-lg text-white hover:bg-gray-700 group cursor-pointer"
+      >
+        <Icon className="w-6 h-6 transition duration-75 text-gray-400 group-hover:text-white" />
+        <span className="ml-2">{label}</span>
+      </button>
+    )}
+  </li>
+);
+
+function SideBar({ styles }) {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const { user } = useSelector((state) => state.user);
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!user) {
+        dispatch(setLoading(true));
+        await profile(token, dispatch, navigate);
+        dispatch(setLoading(false));
+      }
+    };
+    fetchData();
+  }, [user, token, dispatch, navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/sign_in");
   };
+
   return (
-    <div className="hidden md:block border-r-2 border-gray-700 bg-gray-800 w-full max-w-[270px] h-full overflow-y-auto p-4">
-      <div className="w-full px-3 py-2 mb-2">
-        <h1 className="text-white font-medium text-xl line-clamp-1">
-          {user?.name || "Unknown"}
-        </h1>
-        <h6 className="text-white/55 text-xs -mt-0.5">
-          {user?.email || "Unknown"}
-        </h6>
-      </div>
-      <ul className="space-y-2 font-medium">
-        <li>
-          <Link
-            to="/"
-            className="flex items-center p-2 rounded-lg text-white hover:bg-gray-700 group"
-          >
-            <RiDashboard2Fill className="w-6 h-6 transition duration-75 text-gray-400 group-hover:text-white" />
-
-            <span className="ml-2">Dashboard</span>
-          </Link>
-        </li>
-        <li>
-          <Link
-            to="#"
-            className="flex items-center p-2 rounded-lg text-white hover:bg-gray-700 group"
-          >
-            <MdOutlineEventAvailable className="w-6 h-6 transition duration-75 text-gray-400 group-hover:text-white" />
-
-            <span className="ml-2">Enrolled Events</span>
-          </Link>
-        </li>
-        <li>
-          <Link
-            to="/create_event"
-            className="flex items-center p-2 rounded-lg text-white hover:bg-gray-700 group"
-          >
-            <IoIosCreate className="w-[24.4px] h-[24.4px] ml-[1px] transition duration-75 text-gray-400 group-hover:text-white" />
-
-            <span className="ml-2">Create Events</span>
-          </Link>
-        </li>
-        <li>
+    <div
+      className={`w-full h-full md:w-fit absolute top-0 left-0 md:static z-50 bg-black/50 ${styles}`}
+    >
+      <div className="border-r-2 border-gray-700 bg-gray-800 w-full min-w-[270px] max-w-[270px] h-full overflow-y-auto p-4">
+        {/* Close Button for Mobile */}
+        <div className="w-full h-fit flex justify-end items-center">
           <button
-            onClick={handleLogout}
-            className="w-full flex items-center p-2 rounded-lg text-white hover:bg-gray-700 group cursor-pointer"
+            onClick={() => dispatch(setDashboardOpen(false))}
+            type="button"
+            className=" md:hidden text-gray-500 hover:text-white rounded-lg p-1.5 hover:bg-gray-700 cursor-pointer"
           >
-            <IoLogOut className="w-[24.4px] h-[24.4px] ml-[1px] transition duration-75 text-gray-400 group-hover:text-white" />
-
-            <span className="ml-2">Log out</span>
+            <IoCloseOutline className="w-5 h-5" />
           </button>
-        </li>
-      </ul>
+        </div>
+
+        {/* User Info */}
+        <div className="w-full px-3 py-2 mb-2">
+          <h1 className="text-white font-medium text-xl truncate">
+            {user?.name || "Unknown"}
+          </h1>
+          <h6 className="text-white/55 text-xs">{user?.email || "Unknown"}</h6>
+        </div>
+
+        {/* Menu Items */}
+        <ul className="space-y-2 font-medium">
+          <MenuItem to="/" icon={RiDashboard2Fill} label="Dashboard" />
+          <MenuItem
+            to="/create_event"
+            icon={IoIosCreate}
+            label="Create Events"
+          />
+          <MenuItem onClick={handleLogout} icon={IoLogOut} label="Log out" />
+        </ul>
+      </div>
     </div>
   );
 }

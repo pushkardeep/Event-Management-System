@@ -1,24 +1,34 @@
 import React from "react";
-
-// icon
-import { GiAstronautHelmet } from "react-icons/gi";
-import { guest } from "../../services/auth/auth.service";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 
-function GuestLogInBar({ setErrorMessage, setLoadingState }) {
+// icon
+import { GiAstronautHelmet } from "react-icons/gi";
+
+// components
+import { guest } from "../../services/auth/auth.service";
+
+// methods
+import {
+  setLoading,
+  setToastMessage,
+  setIsToatOpen,
+} from "../../redux/slices/ui.slice";
+
+function GuestLogInBar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleGuestLogIn = async () => {
-    setLoadingState(true);
+    dispatch(setLoading(true));
     const { success, message } = await guest(dispatch, navigate);
 
     if (!success) {
-      setErrorMessage(message);
+      dispatch(setIsToatOpen(true));
+      dispatch(setToastMessage(message));
     }
 
-    setLoadingState(false);
+    dispatch(setLoading(false));
   };
   return (
     <div
