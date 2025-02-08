@@ -41,7 +41,6 @@ const EventForm = ({
   formData,
   setFormData,
   onSubmit,
-  isApproved,
 }) => {
   return (
     <form
@@ -98,7 +97,7 @@ const EventForm = ({
         }
         placeholder="Describe the event"
       />
-      <BigButton title="Create Event" disabled={!isApproved} />
+      <BigButton title="Create Event" />
     </form>
   );
 };
@@ -111,14 +110,6 @@ function CreateEvent() {
   const { isToastOpen, isFilterBoxOpen } = useSelector((state) => state.ui);
   const [formData, setFormData] = useState(initialFormData);
   const [cover, setCover] = useState(null);
-  const [isApproved, setIsApproved] = useState(false);
-
-  useEffect(() => {
-    setIsApproved(
-      cover !== null &&
-        Object.values(formData).every((field) => field.trim() !== "")
-    );
-  }, [formData, cover]);
 
   const onFormSubmit = async (e) => {
     e.preventDefault();
@@ -163,7 +154,6 @@ function CreateEvent() {
           formData={formData}
           setFormData={setFormData}
           onSubmit={onFormSubmit}
-          isApproved={isApproved}
         />
       </div>
     </Dashboard>

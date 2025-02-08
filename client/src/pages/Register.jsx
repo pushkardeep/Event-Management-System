@@ -29,7 +29,7 @@ const initialFormData = {
   password: "",
 };
 
-const RegisterForm = ({ formData, setFormData, onSubmit, isApproved }) => {
+const RegisterForm = ({ formData, setFormData, onSubmit }) => {
   return (
     <form
       onSubmit={onSubmit}
@@ -67,7 +67,7 @@ const RegisterForm = ({ formData, setFormData, onSubmit, isApproved }) => {
         value={formData.password}
         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
       />
-      <BigButton title="Create Account" disabled={!isApproved} />
+      <BigButton title="Create Account" />
       <div className="mt-3 text-white text-sm text-center">
         <span>Already have an account?</span>
         <Link
@@ -88,11 +88,6 @@ const Register = () => {
   const navigate = useNavigate();
   const { isLoading, isToastOpen } = useSelector((state) => state.ui);
   const [formData, setFormData] = useState(initialFormData);
-  const [isApproved, setIsApproved] = useState(false);
-
-  useEffect(() => {
-    setIsApproved(Object.values(formData).every((val) => val.trim() !== ""));
-  }, [formData]);
 
   const onFormSubmit = async (e) => {
     e.preventDefault();
@@ -115,7 +110,6 @@ const Register = () => {
         formData={formData}
         setFormData={setFormData}
         onSubmit={onFormSubmit}
-        isApproved={isApproved}
       />
       {isLoading && <ScLoader />}
     </div>

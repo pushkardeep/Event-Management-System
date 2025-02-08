@@ -24,7 +24,7 @@ import {
 
 const initialFormData = { email: "", password: "" };
 
-const SignInForm = ({ formData, setFormData, onSubmit, isApproved }) => {
+const SignInForm = ({ formData, setFormData, onSubmit }) => {
   return (
     <form
       onSubmit={onSubmit}
@@ -46,7 +46,7 @@ const SignInForm = ({ formData, setFormData, onSubmit, isApproved }) => {
         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
         placeholder="********"
       />
-      <BigButton title="Log in" disabled={!isApproved} />
+      <BigButton title="Log in"/>
       <div className="mt-3 text-white text-sm text-center">
         <span>Don't have an account?</span>
         <Link
@@ -68,11 +68,6 @@ function SignIn() {
   const { isLoading, isToastOpen } = useSelector((state) => state.ui);
 
   const [formData, setFormData] = useState(initialFormData);
-  const [isApproved, setIsApproved] = useState(false);
-
-  useEffect(() => {
-    setIsApproved(Object.values(formData).every((field) => field !== ""));
-  }, [formData]);
 
   const onFormSubmit = async (e) => {
     e.preventDefault();
@@ -95,7 +90,6 @@ function SignIn() {
         formData={formData}
         setFormData={setFormData}
         onSubmit={onFormSubmit}
-        isApproved={isApproved}
       />
       {isLoading && <ScLoader />}
     </div>
