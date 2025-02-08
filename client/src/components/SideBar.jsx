@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
+import { resetEvents, resetUserEvents } from "../redux/slices/events.slice";
 
 // Icons
 import { RiDashboard2Fill } from "react-icons/ri";
@@ -55,6 +56,8 @@ function SideBar({ styles }) {
   }, [user, token, dispatch, navigate]);
 
   const handleLogout = () => {
+    dispatch(resetUserEvents());
+    dispatch(resetEvents());
     localStorage.removeItem("token");
     navigate("/sign_in");
   };

@@ -7,7 +7,6 @@ import ScLoader from "./ScLoader";
 
 function Dashboard({ children }) {
   const { isLoading, isDashboardOpen } = useSelector((state) => state.ui);
-
   return (
     <div className="w-screen h-screen bg-gray-900 relative">
       <div className="w-screen h-screen relative flex">

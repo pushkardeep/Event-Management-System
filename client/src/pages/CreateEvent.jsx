@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 
 // Components
 import BigButton from "../components/commmon/BigButton";
@@ -104,6 +105,8 @@ const EventForm = ({
 
 function CreateEvent() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const token = localStorage.getItem("token");
   const { isToastOpen, isFilterBoxOpen } = useSelector((state) => state.ui);
   const [formData, setFormData] = useState(initialFormData);
@@ -127,6 +130,7 @@ function CreateEvent() {
     if (success) {
       setFormData(initialFormData);
       setCover(null);
+      navigate("/");
     }
   };
 

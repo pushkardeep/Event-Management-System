@@ -31,9 +31,17 @@ const eventsSlice = createSlice({
         state.events[eventIndex].attendees.length = attendees; // Update the attendees count
       }
     },
+
+    resetUserEvents: (state)=>{
+     state.user_events = null;
+    },
+
+    resetEvents: (state, action)=>{
+      state.events = null;
+    }
   },
 });
 
-export const { addEvents, addUserEvents, updateAttendees, removeUserEvents } =
+export const { addEvents, addUserEvents, updateAttendees, removeUserEvents, resetUserEvents, resetEvents } =
   eventsSlice.actions;
 export default eventsSlice.reducer;
