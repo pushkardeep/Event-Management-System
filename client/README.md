@@ -23,7 +23,7 @@ This is a React-based Event Management application that allows users to register
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/your-repo/event-management-app.git
+   https://github.com/pushkardeep/Event-Management-System.git
    ```
 2. Navigate to the project directory:
    ```sh
@@ -89,9 +89,6 @@ Create a `.env` file in the root directory and add the following variables:
 VITE_BASE_URL=http://localhost:3000
 VITE_CLOUD_NAME=da2o22xsg
 VITE_IMAGES_UPLOAD_PRESET=ems_img_preset
-REACT_APP_API_URL=<your-api-url>
-REACT_APP_SOCKET_URL=<your-socket-url>
-REACT_APP_CLOUDINARY_URL=<your-cloudinary-url>
 ```
 
 ## Contributing
