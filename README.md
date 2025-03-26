@@ -10,10 +10,6 @@ This is a full-stack Event Management application that enables users to create, 
 - **Real-Time Communication**: WebSocket updates using Socket.io.
 - **Cross-Origin Resource Sharing (CORS)**: Configured for smooth frontend-backend interaction.
 
-## Deployment
-The application is live and accessible at:
-🔗 **[Live Demo](https://ems-gamma-orcin.vercel.app/)**
-
 - **Frontend**: Deployed on **Vercel**.
 - **Backend**: Deployed on **Railway.app**.
 
