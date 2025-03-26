@@ -27,7 +27,7 @@ app.use("/user", userRouter);
 app.use("/event", eventRouter);
 
 app.get("/",(req, res)=>{
-res.send("i am alive")
+res.send("i am alive how are you");
 })
 
 module.exports = server;
